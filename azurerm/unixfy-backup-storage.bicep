@@ -1,11 +1,8 @@
-param storageAccounts_unixfybackupwestus2_name string = 'unixfybackupwestus2'
-
-resource storageAccounts_unixfybackupwestus2_name_resource 'Microsoft.Storage/storageAccounts@2022-09-01' = {
-  name: storageAccounts_unixfybackupwestus2_name
+resource unixfybackupwestus2_storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
+  name: 'unixfybackupwestus2'
   location: 'westus2'
   sku: {
     name: 'Standard_LRS'
-    tier: 'Standard'
   }
   kind: 'StorageV2'
   properties: {
@@ -46,13 +43,9 @@ resource storageAccounts_unixfybackupwestus2_name_resource 'Microsoft.Storage/st
   }
 }
 
-resource storageAccounts_unixfybackupwestus2_name_default 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
-  parent: storageAccounts_unixfybackupwestus2_name_resource
+resource unixfybackupwestus2_storageAccount_blobServices 'Microsoft.Storage/storageAccounts/blobServices@2022-09-01' = {
+  parent: unixfybackupwestus2_storageAccount
   name: 'default'
-  sku: {
-    name: 'Standard_LRS'
-    tier: 'Standard'
-  }
   properties: {
     cors: {
       corsRules: []
@@ -76,13 +69,9 @@ resource storageAccounts_unixfybackupwestus2_name_default 'Microsoft.Storage/sto
   }
 }
 
-resource Microsoft_Storage_storageAccounts_fileServices_storageAccounts_unixfybackupwestus2_name_default 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
-  parent: storageAccounts_unixfybackupwestus2_name_resource
+resource unixfybackupwestus2_storageAccount_fileServices 'Microsoft.Storage/storageAccounts/fileServices@2022-09-01' = {
+  parent: unixfybackupwestus2_storageAccount
   name: 'default'
-  sku: {
-    name: 'Standard_LRS'
-    tier: 'Standard'
-  }
   properties: {
     protocolSettings: {
       smb: {}
@@ -97,8 +86,8 @@ resource Microsoft_Storage_storageAccounts_fileServices_storageAccounts_unixfyba
   }
 }
 
-resource Microsoft_Storage_storageAccounts_queueServices_storageAccounts_unixfybackupwestus2_name_default 'Microsoft.Storage/storageAccounts/queueServices@2022-09-01' = {
-  parent: storageAccounts_unixfybackupwestus2_name_resource
+resource unixfybackupwestus2_storageAccount_queueServices 'Microsoft.Storage/storageAccounts/queueServices@2022-09-01' = {
+  parent: unixfybackupwestus2_storageAccount
   name: 'default'
   properties: {
     cors: {
@@ -107,8 +96,8 @@ resource Microsoft_Storage_storageAccounts_queueServices_storageAccounts_unixfyb
   }
 }
 
-resource Microsoft_Storage_storageAccounts_tableServices_storageAccounts_unixfybackupwestus2_name_default 'Microsoft.Storage/storageAccounts/tableServices@2022-09-01' = {
-  parent: storageAccounts_unixfybackupwestus2_name_resource
+resource unixfybackupwestus2_storageAccount_tableServices 'Microsoft.Storage/storageAccounts/tableServices@2022-09-01' = {
+  parent: unixfybackupwestus2_storageAccount
   name: 'default'
   properties: {
     cors: {
@@ -117,8 +106,8 @@ resource Microsoft_Storage_storageAccounts_tableServices_storageAccounts_unixfyb
   }
 }
 
-resource storageAccounts_unixfybackupwestus2_name_default_gambitprofit 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
-  parent: storageAccounts_unixfybackupwestus2_name_default
+resource unixfybackupwestus2_blob_gambitprofit 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
+  parent: unixfybackupwestus2_storageAccount_blobServices
   name: 'gambitprofit'
   properties: {
     immutableStorageWithVersioning: {
@@ -128,15 +117,11 @@ resource storageAccounts_unixfybackupwestus2_name_default_gambitprofit 'Microsof
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  dependsOn: [
-
-    storageAccounts_unixfybackupwestus2_name_resource
-  ]
 }
 
-resource storageAccounts_unixfybackupwestus2_name_default_thallium 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
-  parent: storageAccounts_unixfybackupwestus2_name_default
-  name: 'thallium'
+resource unixfybackupwestus2_blob_cadmium 'Microsoft.Storage/storageAccounts/blobServices/containers@2022-09-01' = {
+  parent: unixfybackupwestus2_storageAccount_blobServices
+  name: 'cadmium'
   properties: {
     immutableStorageWithVersioning: {
       enabled: false
@@ -145,8 +130,4 @@ resource storageAccounts_unixfybackupwestus2_name_default_thallium 'Microsoft.St
     denyEncryptionScopeOverride: false
     publicAccess: 'None'
   }
-  dependsOn: [
-
-    storageAccounts_unixfybackupwestus2_name_resource
-  ]
 }
