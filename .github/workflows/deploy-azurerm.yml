@@ -2,7 +2,7 @@ name: Deploy Azure Resources
 
 # Directory where bicep templates are located
 env:
-  WORKFLOWS_DIR: /azurerm
+  WORKFLOWS_DIR: ./azurerm
 
 # Controls when the workflow will run
 on:
