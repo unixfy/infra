@@ -17,7 +17,7 @@ jobs:
   list-bicep-templates:
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.generate-matrix.outputs.matrix }}
+      matrix: $TEMPLATES_MATRIX
     steps:
       # checkout code
       - uses: actions/checkout@main
@@ -25,7 +25,7 @@ jobs:
       # hacky command to ls all bicep files in /azurerm/ and output as json array without extensions
       - id: generate-matrix
         working-directory: ${{ env.WORKFLOWS_DIR }}
-        run: echo "::set-output name=matrix::$(ls *.bicep | sed -e 's/\..*$//' | jq -R -s -c 'split("\n")[:-1]')"
+        run: echo "$(ls *.bicep | sed -e 's/\..*$//' | jq -R -s -c 'split("\n")[:-1]')" >> $TEMPLATES_MATRIX
         
   build-and-deploy-bicep:
     needs: list-bicep-templates
