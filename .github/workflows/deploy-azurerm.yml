@@ -6,9 +6,11 @@ env:
 
 # Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
+  # Triggers the workflow on push or pull request events but only for the "main" branch and changes in azurerm directory
   push:
     branches: [ "main" ]
+    paths: 
+      - 'azurerm/**'
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -52,5 +54,4 @@ jobs:
         deploymentMode: Complete
         subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
         template: ${{ env.WORKFLOWS_DIR }}/${{ matrix.template }}.bicep
-        additionalArguments: "--what-if"
         failOnStdErr: false
