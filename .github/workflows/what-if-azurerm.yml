@@ -1,0 +1,59 @@
+name: What-If Azure RM Deployments
+
+# Directory where bicep templates are located
+env:
+  WORKFLOWS_DIR: ./azurerm
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push events on all branches in azurerm directory
+  push:
+    branches: '**'
+    paths: 
+      - 'azurerm/**'
+  
+  # And on PR to main
+  pull_request:
+    branches: ['main']
+
+jobs:
+  list-bicep-templates:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generate-matrix.outputs.matrix }}
+    steps:
+      # checkout code
+      - uses: actions/checkout@main
+      
+      # hacky command to ls all bicep files in /azurerm/ and output as json array without extensions
+      - id: generate-matrix
+        working-directory: ${{ env.WORKFLOWS_DIR }}
+        run: echo "matrix=$(ls *.bicep | sed -e 's/\..*$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+        
+  build-and-test-bicep:
+    needs: list-bicep-templates
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        template: ${{ fromJson(needs.list-bicep-templates.outputs.matrix) }}
+    
+    steps:
+      # Checkout code
+    - uses: actions/checkout@main
+
+      # Log into Azure
+    - uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Test Bicep file with What-If
+    - name: deploy
+      uses: azure/arm-deploy@v1
+      with:
+        scope: resourcegroup
+        resourceGroupName: ${{ matrix.template }}
+        deploymentMode: Complete
+        subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
+        template: ${{ env.WORKFLOWS_DIR }}/${{ matrix.template }}.bicep
+        additionalArguments: "--what-if"
+        failOnStdErr: false
